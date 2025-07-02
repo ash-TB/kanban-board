@@ -6749,6 +6749,13 @@ export type DeleteColumnMutationVariables = Exact<{
 
 export type DeleteColumnMutation = { __typename?: 'mutation_root', delete_columns_by_pk?: { __typename?: 'columns', id: any } | null };
 
+export type BoardByIdSubscriptionVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type BoardByIdSubscription = { __typename?: 'subscription_root', boards_by_pk?: { __typename?: 'boards', id: any, title: string, columns: Array<{ __typename?: 'columns', id: any, title?: string | null, position: number, tasks: Array<{ __typename?: 'tasks', id: any, title: string, description?: string | null, position: number, column_id: any }> }> } | null };
+
 
 export const GetBoardsDocument = gql`
     query GetBoards {
@@ -7171,3 +7178,46 @@ export function useDeleteColumnMutation(baseOptions?: Apollo.MutationHookOptions
 export type DeleteColumnMutationHookResult = ReturnType<typeof useDeleteColumnMutation>;
 export type DeleteColumnMutationResult = Apollo.MutationResult<DeleteColumnMutation>;
 export type DeleteColumnMutationOptions = Apollo.BaseMutationOptions<DeleteColumnMutation, DeleteColumnMutationVariables>;
+export const BoardByIdDocument = gql`
+    subscription BoardById($id: uuid!) {
+  boards_by_pk(id: $id) {
+    id
+    title
+    columns(order_by: {position: asc}) {
+      id
+      title
+      position
+      tasks(order_by: {position: asc}) {
+        id
+        title
+        description
+        position
+        column_id
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useBoardByIdSubscription__
+ *
+ * To run a query within a React component, call `useBoardByIdSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useBoardByIdSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBoardByIdSubscription({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useBoardByIdSubscription(baseOptions: Apollo.SubscriptionHookOptions<BoardByIdSubscription, BoardByIdSubscriptionVariables> & ({ variables: BoardByIdSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<BoardByIdSubscription, BoardByIdSubscriptionVariables>(BoardByIdDocument, options);
+      }
+export type BoardByIdSubscriptionHookResult = ReturnType<typeof useBoardByIdSubscription>;
+export type BoardByIdSubscriptionResult = Apollo.SubscriptionResult<BoardByIdSubscription>;

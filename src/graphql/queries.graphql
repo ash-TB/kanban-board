@@ -113,3 +113,22 @@ mutation DeleteColumn($id: uuid!) {
     id
   }
 }
+
+subscription BoardById($id: uuid!) {
+  boards_by_pk(id: $id) {
+    id
+    title
+    columns(order_by: { position: asc }) {
+      id
+      title
+      position
+      tasks(order_by: { position: asc }) {
+        id
+        title
+        description
+        position
+        column_id
+      }
+    }
+  }
+}
