@@ -34,11 +34,27 @@ mutation AddTask($title: String!, $column_id: uuid!, $position: Int!) {
   }
 }
 
-mutation UpdateTask($id: uuid!, $title: String!, $description: String) {
-  update_tasks_by_pk(pk_columns: { id: $id }, _set: { title: $title, description: $description }) {
+mutation UpdateTask(
+  $id: uuid!
+  $title: String!
+  $description: String
+  $position: Int
+  $column_id: uuid
+) {
+  update_tasks_by_pk(
+    pk_columns: { id: $id }
+    _set: {
+      title: $title
+      description: $description
+      position: $position
+      column_id: $column_id
+    }
+  ) {
     id
     title
     description
+    position
+    column_id
   }
 }
 
@@ -68,13 +84,6 @@ mutation DeleteBoard($id: uuid!) {
   }
 }
 
-mutation AddColumn($boardId: uuid!, $title: String!, $position: Int!) {
-  insert_columns_one(object: { board_id: $boardId, title: $title, position: $position }) {
-    id
-    title
-    position
-  }
-}
 
 mutation AddColumn($boardId: uuid!, $title: String!, $position: Int!) {
   insert_columns_one(object: {
@@ -88,10 +97,14 @@ mutation AddColumn($boardId: uuid!, $title: String!, $position: Int!) {
   }
 }
 
-mutation UpdateColumn($id: uuid!, $title: String!) {
-  update_columns_by_pk(pk_columns: { id: $id }, _set: { title: $title }) {
+mutation UpdateColumn($id: uuid!, $title: String!, $position: Int!) {
+  update_columns_by_pk(
+    pk_columns: { id: $id }
+    _set: { title: $title, position: $position }
+  ) {
     id
     title
+    position
   }
 }
 

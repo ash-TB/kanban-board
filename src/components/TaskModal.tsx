@@ -9,78 +9,62 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 type Task = {
   id: string;
   title: string;
   description?: string;
+  position: number;
 };
 
 type Props = {
-  task: Task | null;            // allow null for create mode
+  task: Task | null;
   onClose: () => void;
   onSave: (updated: { title: string; description?: string }) => void;
   onDelete: (taskId: string) => void;
 };
 
 export default function TaskModal({ task, onClose, onSave, onDelete }: Props) {
-  // Initialize state from task or empty for create mode
-  const [title, setTitle] = useState(task?.title ?? "");
-  const [description, setDescription] = useState(task?.description ?? "");
-
-  // Reset form when task changes (important for modal reuse)
-  useEffect(() => {
-    setTitle(task?.title ?? "");
-    setDescription(task?.description ?? "");
-  }, [task]);
-
-  const isEditMode = task !== null;
+  const [title, setTitle] = useState(task?.title || "");
+  const [description, setDescription] = useState(task?.description || "");
 
   const handleSave = () => {
-    if (title.trim() === "") {
-      alert("Title is required");
-      return;
-    }
-    onSave({ title: title.trim(), description: description.trim() || undefined });
+    onSave({ title, description });
     onClose();
   };
 
   const handleDelete = () => {
-    if (!task) return;
-    onDelete(task.id);
-    onClose();
+    if (task) {
+      onDelete(task.id);
+      onClose();
+    }
   };
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{isEditMode ? "Edit Task" : "Add Task"}</DialogTitle>
+          <DialogTitle>{task ? "Edit Task" : "Add Task"}</DialogTitle>
         </DialogHeader>
-
         <div className="space-y-4">
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Task title"
-            autoFocus
           />
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Description (optional)"
+            placeholder="Description"
           />
-
           <div className="flex justify-end gap-2">
-            {isEditMode && (
+            {task && (
               <Button variant="destructive" onClick={handleDelete}>
                 Delete
               </Button>
             )}
-            <Button onClick={handleSave}>
-              {isEditMode ? "Save" : "Create"}
-            </Button>
+            <Button onClick={handleSave}>Save</Button>
           </div>
         </div>
       </DialogContent>

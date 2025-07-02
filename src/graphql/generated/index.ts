@@ -6688,10 +6688,12 @@ export type UpdateTaskMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
   title: Scalars['String']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
+  position?: InputMaybe<Scalars['Int']['input']>;
+  column_id?: InputMaybe<Scalars['uuid']['input']>;
 }>;
 
 
-export type UpdateTaskMutation = { __typename?: 'mutation_root', update_tasks_by_pk?: { __typename?: 'tasks', id: any, title: string, description?: string | null } | null };
+export type UpdateTaskMutation = { __typename?: 'mutation_root', update_tasks_by_pk?: { __typename?: 'tasks', id: any, title: string, description?: string | null, position: number, column_id: any } | null };
 
 export type DeleteTaskMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -6734,10 +6736,11 @@ export type AddColumnMutation = { __typename?: 'mutation_root', insert_columns_o
 export type UpdateColumnMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
   title: Scalars['String']['input'];
+  position: Scalars['Int']['input'];
 }>;
 
 
-export type UpdateColumnMutation = { __typename?: 'mutation_root', update_columns_by_pk?: { __typename?: 'columns', id: any, title?: string | null } | null };
+export type UpdateColumnMutation = { __typename?: 'mutation_root', update_columns_by_pk?: { __typename?: 'columns', id: any, title?: string | null, position: number } | null };
 
 export type DeleteColumnMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -6878,14 +6881,16 @@ export type AddTaskMutationHookResult = ReturnType<typeof useAddTaskMutation>;
 export type AddTaskMutationResult = Apollo.MutationResult<AddTaskMutation>;
 export type AddTaskMutationOptions = Apollo.BaseMutationOptions<AddTaskMutation, AddTaskMutationVariables>;
 export const UpdateTaskDocument = gql`
-    mutation UpdateTask($id: uuid!, $title: String!, $description: String) {
+    mutation UpdateTask($id: uuid!, $title: String!, $description: String, $position: Int, $column_id: uuid) {
   update_tasks_by_pk(
     pk_columns: {id: $id}
-    _set: {title: $title, description: $description}
+    _set: {title: $title, description: $description, position: $position, column_id: $column_id}
   ) {
     id
     title
     description
+    position
+    column_id
   }
 }
     `;
@@ -6907,6 +6912,8 @@ export type UpdateTaskMutationFn = Apollo.MutationFunction<UpdateTaskMutation, U
  *      id: // value for 'id'
  *      title: // value for 'title'
  *      description: // value for 'description'
+ *      position: // value for 'position'
+ *      column_id: // value for 'column_id'
  *   },
  * });
  */
@@ -7092,10 +7099,14 @@ export type AddColumnMutationHookResult = ReturnType<typeof useAddColumnMutation
 export type AddColumnMutationResult = Apollo.MutationResult<AddColumnMutation>;
 export type AddColumnMutationOptions = Apollo.BaseMutationOptions<AddColumnMutation, AddColumnMutationVariables>;
 export const UpdateColumnDocument = gql`
-    mutation UpdateColumn($id: uuid!, $title: String!) {
-  update_columns_by_pk(pk_columns: {id: $id}, _set: {title: $title}) {
+    mutation UpdateColumn($id: uuid!, $title: String!, $position: Int!) {
+  update_columns_by_pk(
+    pk_columns: {id: $id}
+    _set: {title: $title, position: $position}
+  ) {
     id
     title
+    position
   }
 }
     `;
@@ -7116,6 +7127,7 @@ export type UpdateColumnMutationFn = Apollo.MutationFunction<UpdateColumnMutatio
  *   variables: {
  *      id: // value for 'id'
  *      title: // value for 'title'
+ *      position: // value for 'position'
  *   },
  * });
  */
