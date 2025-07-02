@@ -6668,6 +6668,84 @@ export type GetBoardsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetBoardsQuery = { __typename?: 'query_root', boards: Array<{ __typename?: 'boards', id: any, title: string }> };
 
+export type GetBoardByIdQueryVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type GetBoardByIdQuery = { __typename?: 'query_root', boards_by_pk?: { __typename?: 'boards', id: any, title: string, columns: Array<{ __typename?: 'columns', id: any, title?: string | null, position: number, tasks: Array<{ __typename?: 'tasks', id: any, title: string, position: number }> }> } | null };
+
+export type AddTaskMutationVariables = Exact<{
+  title: Scalars['String']['input'];
+  column_id: Scalars['uuid']['input'];
+  position: Scalars['Int']['input'];
+}>;
+
+
+export type AddTaskMutation = { __typename?: 'mutation_root', insert_tasks_one?: { __typename?: 'tasks', id: any, title: string, position: number } | null };
+
+export type UpdateTaskMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  title: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type UpdateTaskMutation = { __typename?: 'mutation_root', update_tasks_by_pk?: { __typename?: 'tasks', id: any, title: string, description?: string | null } | null };
+
+export type DeleteTaskMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type DeleteTaskMutation = { __typename?: 'mutation_root', delete_tasks_by_pk?: { __typename?: 'tasks', id: any } | null };
+
+export type InsertBoardMutationVariables = Exact<{
+  title: Scalars['String']['input'];
+}>;
+
+
+export type InsertBoardMutation = { __typename?: 'mutation_root', insert_boards_one?: { __typename?: 'boards', id: any, title: string } | null };
+
+export type UpdateBoardMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  title: Scalars['String']['input'];
+}>;
+
+
+export type UpdateBoardMutation = { __typename?: 'mutation_root', update_boards_by_pk?: { __typename?: 'boards', id: any, title: string } | null };
+
+export type DeleteBoardMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type DeleteBoardMutation = { __typename?: 'mutation_root', delete_boards_by_pk?: { __typename?: 'boards', id: any } | null };
+
+export type AddColumnMutationVariables = Exact<{
+  boardId: Scalars['uuid']['input'];
+  title: Scalars['String']['input'];
+  position: Scalars['Int']['input'];
+}>;
+
+
+export type AddColumnMutation = { __typename?: 'mutation_root', insert_columns_one?: { __typename?: 'columns', id: any, title?: string | null, position: number } | null };
+
+export type UpdateColumnMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  title: Scalars['String']['input'];
+}>;
+
+
+export type UpdateColumnMutation = { __typename?: 'mutation_root', update_columns_by_pk?: { __typename?: 'columns', id: any, title?: string | null } | null };
+
+export type DeleteColumnMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type DeleteColumnMutation = { __typename?: 'mutation_root', delete_columns_by_pk?: { __typename?: 'columns', id: any } | null };
+
 
 export const GetBoardsDocument = gql`
     query GetBoards {
@@ -6709,3 +6787,375 @@ export type GetBoardsQueryHookResult = ReturnType<typeof useGetBoardsQuery>;
 export type GetBoardsLazyQueryHookResult = ReturnType<typeof useGetBoardsLazyQuery>;
 export type GetBoardsSuspenseQueryHookResult = ReturnType<typeof useGetBoardsSuspenseQuery>;
 export type GetBoardsQueryResult = Apollo.QueryResult<GetBoardsQuery, GetBoardsQueryVariables>;
+export const GetBoardByIdDocument = gql`
+    query GetBoardById($id: uuid!) {
+  boards_by_pk(id: $id) {
+    id
+    title
+    columns {
+      id
+      title
+      position
+      tasks {
+        id
+        title
+        position
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetBoardByIdQuery__
+ *
+ * To run a query within a React component, call `useGetBoardByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBoardByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBoardByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetBoardByIdQuery(baseOptions: Apollo.QueryHookOptions<GetBoardByIdQuery, GetBoardByIdQueryVariables> & ({ variables: GetBoardByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBoardByIdQuery, GetBoardByIdQueryVariables>(GetBoardByIdDocument, options);
+      }
+export function useGetBoardByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBoardByIdQuery, GetBoardByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBoardByIdQuery, GetBoardByIdQueryVariables>(GetBoardByIdDocument, options);
+        }
+export function useGetBoardByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetBoardByIdQuery, GetBoardByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetBoardByIdQuery, GetBoardByIdQueryVariables>(GetBoardByIdDocument, options);
+        }
+export type GetBoardByIdQueryHookResult = ReturnType<typeof useGetBoardByIdQuery>;
+export type GetBoardByIdLazyQueryHookResult = ReturnType<typeof useGetBoardByIdLazyQuery>;
+export type GetBoardByIdSuspenseQueryHookResult = ReturnType<typeof useGetBoardByIdSuspenseQuery>;
+export type GetBoardByIdQueryResult = Apollo.QueryResult<GetBoardByIdQuery, GetBoardByIdQueryVariables>;
+export const AddTaskDocument = gql`
+    mutation AddTask($title: String!, $column_id: uuid!, $position: Int!) {
+  insert_tasks_one(
+    object: {title: $title, column_id: $column_id, position: $position}
+  ) {
+    id
+    title
+    position
+  }
+}
+    `;
+export type AddTaskMutationFn = Apollo.MutationFunction<AddTaskMutation, AddTaskMutationVariables>;
+
+/**
+ * __useAddTaskMutation__
+ *
+ * To run a mutation, you first call `useAddTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addTaskMutation, { data, loading, error }] = useAddTaskMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      column_id: // value for 'column_id'
+ *      position: // value for 'position'
+ *   },
+ * });
+ */
+export function useAddTaskMutation(baseOptions?: Apollo.MutationHookOptions<AddTaskMutation, AddTaskMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddTaskMutation, AddTaskMutationVariables>(AddTaskDocument, options);
+      }
+export type AddTaskMutationHookResult = ReturnType<typeof useAddTaskMutation>;
+export type AddTaskMutationResult = Apollo.MutationResult<AddTaskMutation>;
+export type AddTaskMutationOptions = Apollo.BaseMutationOptions<AddTaskMutation, AddTaskMutationVariables>;
+export const UpdateTaskDocument = gql`
+    mutation UpdateTask($id: uuid!, $title: String!, $description: String) {
+  update_tasks_by_pk(
+    pk_columns: {id: $id}
+    _set: {title: $title, description: $description}
+  ) {
+    id
+    title
+    description
+  }
+}
+    `;
+export type UpdateTaskMutationFn = Apollo.MutationFunction<UpdateTaskMutation, UpdateTaskMutationVariables>;
+
+/**
+ * __useUpdateTaskMutation__
+ *
+ * To run a mutation, you first call `useUpdateTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTaskMutation, { data, loading, error }] = useUpdateTaskMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      title: // value for 'title'
+ *      description: // value for 'description'
+ *   },
+ * });
+ */
+export function useUpdateTaskMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTaskMutation, UpdateTaskMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTaskMutation, UpdateTaskMutationVariables>(UpdateTaskDocument, options);
+      }
+export type UpdateTaskMutationHookResult = ReturnType<typeof useUpdateTaskMutation>;
+export type UpdateTaskMutationResult = Apollo.MutationResult<UpdateTaskMutation>;
+export type UpdateTaskMutationOptions = Apollo.BaseMutationOptions<UpdateTaskMutation, UpdateTaskMutationVariables>;
+export const DeleteTaskDocument = gql`
+    mutation DeleteTask($id: uuid!) {
+  delete_tasks_by_pk(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteTaskMutationFn = Apollo.MutationFunction<DeleteTaskMutation, DeleteTaskMutationVariables>;
+
+/**
+ * __useDeleteTaskMutation__
+ *
+ * To run a mutation, you first call `useDeleteTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTaskMutation, { data, loading, error }] = useDeleteTaskMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTaskMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTaskMutation, DeleteTaskMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTaskMutation, DeleteTaskMutationVariables>(DeleteTaskDocument, options);
+      }
+export type DeleteTaskMutationHookResult = ReturnType<typeof useDeleteTaskMutation>;
+export type DeleteTaskMutationResult = Apollo.MutationResult<DeleteTaskMutation>;
+export type DeleteTaskMutationOptions = Apollo.BaseMutationOptions<DeleteTaskMutation, DeleteTaskMutationVariables>;
+export const InsertBoardDocument = gql`
+    mutation InsertBoard($title: String!) {
+  insert_boards_one(object: {title: $title}) {
+    id
+    title
+  }
+}
+    `;
+export type InsertBoardMutationFn = Apollo.MutationFunction<InsertBoardMutation, InsertBoardMutationVariables>;
+
+/**
+ * __useInsertBoardMutation__
+ *
+ * To run a mutation, you first call `useInsertBoardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertBoardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [insertBoardMutation, { data, loading, error }] = useInsertBoardMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useInsertBoardMutation(baseOptions?: Apollo.MutationHookOptions<InsertBoardMutation, InsertBoardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<InsertBoardMutation, InsertBoardMutationVariables>(InsertBoardDocument, options);
+      }
+export type InsertBoardMutationHookResult = ReturnType<typeof useInsertBoardMutation>;
+export type InsertBoardMutationResult = Apollo.MutationResult<InsertBoardMutation>;
+export type InsertBoardMutationOptions = Apollo.BaseMutationOptions<InsertBoardMutation, InsertBoardMutationVariables>;
+export const UpdateBoardDocument = gql`
+    mutation UpdateBoard($id: uuid!, $title: String!) {
+  update_boards_by_pk(pk_columns: {id: $id}, _set: {title: $title}) {
+    id
+    title
+  }
+}
+    `;
+export type UpdateBoardMutationFn = Apollo.MutationFunction<UpdateBoardMutation, UpdateBoardMutationVariables>;
+
+/**
+ * __useUpdateBoardMutation__
+ *
+ * To run a mutation, you first call `useUpdateBoardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateBoardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateBoardMutation, { data, loading, error }] = useUpdateBoardMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useUpdateBoardMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBoardMutation, UpdateBoardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateBoardMutation, UpdateBoardMutationVariables>(UpdateBoardDocument, options);
+      }
+export type UpdateBoardMutationHookResult = ReturnType<typeof useUpdateBoardMutation>;
+export type UpdateBoardMutationResult = Apollo.MutationResult<UpdateBoardMutation>;
+export type UpdateBoardMutationOptions = Apollo.BaseMutationOptions<UpdateBoardMutation, UpdateBoardMutationVariables>;
+export const DeleteBoardDocument = gql`
+    mutation DeleteBoard($id: uuid!) {
+  delete_boards_by_pk(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteBoardMutationFn = Apollo.MutationFunction<DeleteBoardMutation, DeleteBoardMutationVariables>;
+
+/**
+ * __useDeleteBoardMutation__
+ *
+ * To run a mutation, you first call `useDeleteBoardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBoardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBoardMutation, { data, loading, error }] = useDeleteBoardMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteBoardMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBoardMutation, DeleteBoardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteBoardMutation, DeleteBoardMutationVariables>(DeleteBoardDocument, options);
+      }
+export type DeleteBoardMutationHookResult = ReturnType<typeof useDeleteBoardMutation>;
+export type DeleteBoardMutationResult = Apollo.MutationResult<DeleteBoardMutation>;
+export type DeleteBoardMutationOptions = Apollo.BaseMutationOptions<DeleteBoardMutation, DeleteBoardMutationVariables>;
+export const AddColumnDocument = gql`
+    mutation AddColumn($boardId: uuid!, $title: String!, $position: Int!) {
+  insert_columns_one(
+    object: {board_id: $boardId, title: $title, position: $position}
+  ) {
+    id
+    title
+    position
+  }
+}
+    `;
+export type AddColumnMutationFn = Apollo.MutationFunction<AddColumnMutation, AddColumnMutationVariables>;
+
+/**
+ * __useAddColumnMutation__
+ *
+ * To run a mutation, you first call `useAddColumnMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddColumnMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addColumnMutation, { data, loading, error }] = useAddColumnMutation({
+ *   variables: {
+ *      boardId: // value for 'boardId'
+ *      title: // value for 'title'
+ *      position: // value for 'position'
+ *   },
+ * });
+ */
+export function useAddColumnMutation(baseOptions?: Apollo.MutationHookOptions<AddColumnMutation, AddColumnMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddColumnMutation, AddColumnMutationVariables>(AddColumnDocument, options);
+      }
+export type AddColumnMutationHookResult = ReturnType<typeof useAddColumnMutation>;
+export type AddColumnMutationResult = Apollo.MutationResult<AddColumnMutation>;
+export type AddColumnMutationOptions = Apollo.BaseMutationOptions<AddColumnMutation, AddColumnMutationVariables>;
+export const UpdateColumnDocument = gql`
+    mutation UpdateColumn($id: uuid!, $title: String!) {
+  update_columns_by_pk(pk_columns: {id: $id}, _set: {title: $title}) {
+    id
+    title
+  }
+}
+    `;
+export type UpdateColumnMutationFn = Apollo.MutationFunction<UpdateColumnMutation, UpdateColumnMutationVariables>;
+
+/**
+ * __useUpdateColumnMutation__
+ *
+ * To run a mutation, you first call `useUpdateColumnMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateColumnMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateColumnMutation, { data, loading, error }] = useUpdateColumnMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useUpdateColumnMutation(baseOptions?: Apollo.MutationHookOptions<UpdateColumnMutation, UpdateColumnMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateColumnMutation, UpdateColumnMutationVariables>(UpdateColumnDocument, options);
+      }
+export type UpdateColumnMutationHookResult = ReturnType<typeof useUpdateColumnMutation>;
+export type UpdateColumnMutationResult = Apollo.MutationResult<UpdateColumnMutation>;
+export type UpdateColumnMutationOptions = Apollo.BaseMutationOptions<UpdateColumnMutation, UpdateColumnMutationVariables>;
+export const DeleteColumnDocument = gql`
+    mutation DeleteColumn($id: uuid!) {
+  delete_columns_by_pk(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteColumnMutationFn = Apollo.MutationFunction<DeleteColumnMutation, DeleteColumnMutationVariables>;
+
+/**
+ * __useDeleteColumnMutation__
+ *
+ * To run a mutation, you first call `useDeleteColumnMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteColumnMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteColumnMutation, { data, loading, error }] = useDeleteColumnMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteColumnMutation(baseOptions?: Apollo.MutationHookOptions<DeleteColumnMutation, DeleteColumnMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteColumnMutation, DeleteColumnMutationVariables>(DeleteColumnDocument, options);
+      }
+export type DeleteColumnMutationHookResult = ReturnType<typeof useDeleteColumnMutation>;
+export type DeleteColumnMutationResult = Apollo.MutationResult<DeleteColumnMutation>;
+export type DeleteColumnMutationOptions = Apollo.BaseMutationOptions<DeleteColumnMutation, DeleteColumnMutationVariables>;

@@ -1,25 +1,16 @@
-"use client";
-
-import { useGetBoardsQuery } from '@/graphql/generated';
+import BoardsList from "@/components/BoardsList";
+import CreateBoardButton from "@/components/AddBoardForm";
 
 export default function HomePage() {
-  const { data, loading, error } = useGetBoardsQuery();
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
   return (
-    <div>
-      <h1 className='text-2xl font-bold mb-4'>Boards</h1>
-      {data?.boards.length ? (
-        <ul className="space-y-2">
-          {data.boards.map((board) => (
-            <li key={board.id} className="p-4 border rounded">{board.title}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No boards found</p>
-      )}
-    </div>
+    <main className="p-8">
+      <h1 className="text-3xl font-bold mb-6">Your Boards</h1>
+
+      <CreateBoardButton />
+
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <BoardsList />
+      </div>
+    </main>
   );
 }

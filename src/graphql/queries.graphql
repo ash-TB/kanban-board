@@ -4,3 +4,99 @@ query GetBoards {
     title
   }
 }
+
+query GetBoardById($id: uuid!) {
+  boards_by_pk(id: $id) {
+    id
+    title
+    columns {
+      id
+      title
+      position
+      tasks {
+        id
+        title
+        position
+      }
+    }
+  }
+}
+
+mutation AddTask($title: String!, $column_id: uuid!, $position: Int!) {
+  insert_tasks_one(object: {
+    title: $title,
+    column_id: $column_id,
+    position: $position
+  }) {
+    id
+    title
+    position
+  }
+}
+
+mutation UpdateTask($id: uuid!, $title: String!, $description: String) {
+  update_tasks_by_pk(pk_columns: { id: $id }, _set: { title: $title, description: $description }) {
+    id
+    title
+    description
+  }
+}
+
+mutation DeleteTask($id: uuid!) {
+  delete_tasks_by_pk(id: $id) {
+    id
+  }
+}
+
+mutation InsertBoard($title: String!) {
+  insert_boards_one(object: { title: $title }) {
+    id
+    title
+  }
+}
+
+mutation UpdateBoard($id: uuid!, $title: String!) {
+  update_boards_by_pk(pk_columns: { id: $id }, _set: { title: $title }) {
+    id
+    title
+  }
+}
+
+mutation DeleteBoard($id: uuid!) {
+  delete_boards_by_pk(id: $id) {
+    id
+  }
+}
+
+mutation AddColumn($boardId: uuid!, $title: String!, $position: Int!) {
+  insert_columns_one(object: { board_id: $boardId, title: $title, position: $position }) {
+    id
+    title
+    position
+  }
+}
+
+mutation AddColumn($boardId: uuid!, $title: String!, $position: Int!) {
+  insert_columns_one(object: {
+    board_id: $boardId,
+    title: $title,
+    position: $position
+  }) {
+    id
+    title
+    position
+  }
+}
+
+mutation UpdateColumn($id: uuid!, $title: String!) {
+  update_columns_by_pk(pk_columns: { id: $id }, _set: { title: $title }) {
+    id
+    title
+  }
+}
+
+mutation DeleteColumn($id: uuid!) {
+  delete_columns_by_pk(id: $id) {
+    id
+  }
+}
