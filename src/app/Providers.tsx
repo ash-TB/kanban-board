@@ -1,17 +1,16 @@
-// src/app/Providers.tsx
-'use client';
+'use client'
 
 import { ApolloProvider } from '@apollo/client'
-import { NhostReactProvider } from '@nhost/nextjs'
-import { client } from '@/lib/apollo'
+import { NhostProvider } from '@nhost/nextjs'
 import { nhost } from '@/lib/nhost'
+import { createApolloClient } from '@/lib/apollo'
 
 export default function Providers({ children }: { children: React.ReactNode }) {
+  const client = createApolloClient()
+
   return (
-    <NhostReactProvider nhost={nhost}>
-      <ApolloProvider client={client}>
-        {children}
-      </ApolloProvider>
-    </NhostReactProvider>
+    <NhostProvider nhost={nhost}>
+      <ApolloProvider client={client}>{children}</ApolloProvider>
+    </NhostProvider>
   )
 }

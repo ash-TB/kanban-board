@@ -20,6 +20,9 @@ importers:
       '@nhost/nhost-js':
         specifier: ^3.2.9
         version: 3.2.9(graphql@16.11.0)
+      '@nhost/react':
+        specifier: ^3.11.1
+        version: 3.11.1(@types/react@18.3.23)(graphql@16.11.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dialog':
         specifier: ^1.1.14
         version: 1.1.14(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -965,6 +968,9 @@ packages:
   '@nhost/hasura-storage-js@2.7.1':
     resolution: {integrity: sha512-VYXpI9mOMdz0Kqi0S4XNS1PRjx5tRCig8xX3A1PzW8fF96UtwwFFxPjHzLVv0fHCZ6FiXlLuycEqhGMeb90nJQ==}
 
+  '@nhost/hasura-storage-js@2.8.0':
+    resolution: {integrity: sha512-F4IYe0FnezcaGnBJyPMTAFcFa7pJBTOWng+iXsFQkBPAEtjHvRVCaAdb6VLH0caYf24CotTdJ9H7RH+DOD8Vfw==}
+
   '@nhost/nextjs@2.2.8':
     resolution: {integrity: sha512-G4gMvr4oNSUzmn+Lle5yi8pczoyhjk/HwY+kJzr/ao6srcz5lyIjlF6Uk2g7hCfkX1k/ED43rE5jXk52MTa7Ag==}
     peerDependencies:
@@ -977,8 +983,19 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
 
+  '@nhost/nhost-js@3.3.0':
+    resolution: {integrity: sha512-Nlym38IPhYiJRXW+oHRy8MQ/p2pCwcuHRw0qasrJFbkqX6UbPcsOkyzB2XOqbPQvsD009xOOr4TswA3UU2F1Lw==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+
   '@nhost/react@3.11.0':
     resolution: {integrity: sha512-Ag8SrUA2MRFHBNNe14x9G5ZxIngHQFCEoT9YjKzYD76GV7Ns1VlnCM09yLlSS5GZ2gaOdv5oWyXRUBaA5LNySQ==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.1.0 || ^19.0.0
+      react-dom: ^17.0.0 || ^18.1.0 || ^19.0.0
+
+  '@nhost/react@3.11.1':
+    resolution: {integrity: sha512-28ewEwjgw89afbMP00T54fJYLYlKl8+ShnauehWhMqwh3Za4p1sVrY0+Uyj3qO0mq/ctorQLMfSNzrtGxYK/+w==}
     peerDependencies:
       react: ^17.0.0 || ^18.1.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.1.0 || ^19.0.0
@@ -4904,6 +4921,15 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@nhost/hasura-storage-js@2.8.0':
+    dependencies:
+      fetch-ponyfill: 7.1.0
+      form-data: 4.0.3
+      graphql: 16.8.1
+      xstate: 4.38.3
+    transitivePeerDependencies:
+      - encoding
+
   '@nhost/nextjs@2.2.8(@types/react@18.3.23)(next@15.3.4(@babel/core@7.27.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@nhost/react': 3.11.0(@types/react@18.3.23)(graphql@16.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -4939,9 +4965,33 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@nhost/nhost-js@3.3.0(graphql@16.11.0)':
+    dependencies:
+      '@nhost/graphql-js': 0.3.0(graphql@16.11.0)
+      '@nhost/hasura-auth-js': 2.12.0
+      '@nhost/hasura-storage-js': 2.8.0
+      graphql: 16.11.0
+      isomorphic-unfetch: 3.1.0
+    transitivePeerDependencies:
+      - encoding
+
   '@nhost/react@3.11.0(@types/react@18.3.23)(graphql@16.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@nhost/nhost-js': 3.2.9(graphql@16.8.1)
+      '@xstate/react': 3.2.2(@types/react@18.3.23)(react@18.3.1)(xstate@4.38.3)
+      jwt-decode: 4.0.0
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      xstate: 4.38.3
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@xstate/fsm'
+      - encoding
+      - graphql
+
+  '@nhost/react@3.11.1(@types/react@18.3.23)(graphql@16.11.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@nhost/nhost-js': 3.3.0(graphql@16.11.0)
       '@xstate/react': 3.2.2(@types/react@18.3.23)(react@18.3.1)(xstate@4.38.3)
       jwt-decode: 4.0.0
       react: 18.3.1

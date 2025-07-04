@@ -43,10 +43,9 @@ type Board = {
 
 type Props = {
   board: Board;
-  refetch: () => void; // ✅ NEW
 };
 
-export default function BoardDetail({ board, refetch }: Props) {
+export default function BoardDetail({ board }: Props) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
 
@@ -121,7 +120,7 @@ export default function BoardDetail({ board, refetch }: Props) {
         );
 
         const [moved] = sourceTasks.splice(source.index, 1);
-        const movedTask = { ...moved, column_id: destCol.id }; // ✅ clone
+        const movedTask = { ...moved, column_id: destCol.id }; // clone
 
         destTasks.splice(destination.index, 0, movedTask);
 
@@ -152,8 +151,6 @@ export default function BoardDetail({ board, refetch }: Props) {
         }
       }
     }
-
-    await refetch(); // ✅ refetch fresh data
   }
 
   return (
@@ -313,13 +310,13 @@ export default function BoardDetail({ board, refetch }: Props) {
             }
             setSelectedTask(null);
             setSelectedColumnId(null);
-            await refetch(); // ✅
+            // No need to refetch because subscription updates live
           }}
           onDelete={async (taskId) => {
             await deleteTask({ variables: { id: taskId } });
             setSelectedTask(null);
             setSelectedColumnId(null);
-            await refetch(); // ✅
+            // No need to refetch
           }}
         />
       )}
@@ -348,13 +345,13 @@ export default function BoardDetail({ board, refetch }: Props) {
             }
             setIsColumnModalOpen(false);
             setSelectedColumn(null);
-            await refetch(); // ✅
+            // No need to refetch
           }}
           onDelete={async (id) => {
             await deleteColumn({ variables: { id } });
             setIsColumnModalOpen(false);
             setSelectedColumn(null);
-            await refetch(); // ✅
+            // No need to refetch
           }}
         />
       )}
