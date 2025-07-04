@@ -31,7 +31,7 @@ export default function BoardPage() {
   if (error) return <p>Error loading board: {error.message}</p>;
 
   // If no board is found, show fallback
-  const board = data?.boards_by_pk;
+  const board = data?.boards_by_pk as any;
   if (!board) return <p>Board not found</p>;
 
   // Render the board details
