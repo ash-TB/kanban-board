@@ -1,5 +1,16 @@
 'use client'
 
+/**
+ * SignUp Component
+ * -----------------------------
+ * A simple signup form that registers a new user
+ * using Nhost's email/password authentication.
+ *
+ * - Uses Nhost's `useSignUpEmailPassword` hook for sign up.
+ * - Shows success message and guides user to confirm email.
+ * - Redirects user to the login page after signing up.
+ */
+
 import { useState } from 'react'
 import { useSignUpEmailPassword } from '@nhost/nextjs'
 import { useRouter } from 'next/navigation'
@@ -13,6 +24,10 @@ export default function SignUp() {
   const [password, setPassword] = useState('')
   const [signedUp, setSignedUp] = useState(false)
 
+  /**
+   * Handles the sign up form submission.
+   * Registers the user and shows confirmation instructions.
+   */
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault()
     const result = await signUpEmailPassword(email, password)
@@ -21,6 +36,7 @@ export default function SignUp() {
     }
   }
 
+  // If sign up is successful, show confirmation instructions
   if (signedUp) {
     return (
       <div className="max-w-sm mx-auto p-4 space-y-4">
@@ -38,6 +54,7 @@ export default function SignUp() {
     )
   }
 
+  // Render the sign up form
   return (
     <form onSubmit={handleSignUp} className="max-w-sm mx-auto p-4 space-y-4">
       <h2 className="text-lg font-semibold">Sign Up</h2>

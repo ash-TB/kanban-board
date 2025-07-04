@@ -1,5 +1,14 @@
-"use client";
+/**
+ * Counter Component
+ * ---------------------
+ * This component is used as a practice excercise.
+ * 
+ * Props:
+ * - number: the current number based on increments/decrements
+ */
 
+
+"use client";
 import React, {useState} from "react";
 
 interface CounterProps {

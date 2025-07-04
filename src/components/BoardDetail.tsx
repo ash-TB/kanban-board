@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * BoardDetail Component
+ * ---------------------
+ * Renders the detailed Kanban board view with drag & drop support,
+ * columns, tasks, and modals for creating/editing tasks and columns.
+ * 
+ * Tech: React, TypeScript, Apollo GraphQL, @hello-pangea/dnd.
+ */
+
 import React, { useState } from "react";
 import Link from "next/link";
 import TaskModal from "./TaskModal";
@@ -20,6 +29,10 @@ import {
   useDeleteColumnMutation,
 } from "@/graphql/generated";
 
+/**
+ * Task type definition.
+ * Represents a single Kanban task/card.
+ */
 type Task = {
   id: string;
   title: string;
@@ -28,6 +41,10 @@ type Task = {
   column_id?: string;
 };
 
+/**
+ * Column type definition.
+ * Represents a single Kanban column/list.
+ */
 type Column = {
   id: string;
   title: string;
@@ -35,46 +52,78 @@ type Column = {
   tasks: Task[];
 };
 
+/**
+ * Board type definition.
+ * Represents a full Kanban board containing multiple columns.
+ */
 type Board = {
   id: string;
   title: string;
   columns: Column[];
 };
 
+/**
+ * Component props.
+ * Accepts a board to render.
+ */
 type Props = {
   board: Board;
 };
 
+/**
+ * BoardDetail
+ * --------------------------
+ * Main board view component.
+ * Handles drag & drop reordering,
+ * task/column CRUD actions,
+ * and modal state.
+ */
 export default function BoardDetail({ board }: Props) {
+  // Active task for editing or creating
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  // Column ID where new/edit task is created
   const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
 
+  // Active column for editing
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
+  // Column modal open state
   const [isColumnModalOpen, setIsColumnModalOpen] = useState(false);
 
+  // Task CRUD mutations
   const [createTask] = useAddTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
   const [deleteTask] = useDeleteTaskMutation();
 
+  // Column CRUD mutations
   const [createColumn] = useAddColumnMutation();
   const [updateColumn] = useUpdateColumnMutation();
   const [deleteColumn] = useDeleteColumnMutation();
 
+  /**
+   * Get the next task position index in the given column.
+   * Used to append new tasks at the end.
+   */
   const getNextTaskPosition = (columnId: string) => {
     const column = board.columns.find((col) => col.id === columnId);
     return column ? column.tasks.length : 0;
   };
 
+  /**
+   * Handle drag & drop events for both columns and tasks.
+   * Updates their position indexes in the backend.
+   */
   async function handleDragEnd(result: DropResult) {
     const { source, destination, type } = result;
 
     if (!destination) return;
 
     if (type === "COLUMN") {
+      // Handle column reordering
       const cols = [...board.columns].sort((a, b) => a.position - b.position);
       const [moved] = cols.splice(source.index, 1);
       cols.splice(destination.index, 0, moved);
 
+      // Update positions in backend
       for (let i = 0; i < cols.length; i++) {
         const col = cols[i];
         await updateColumn({
@@ -86,6 +135,7 @@ export default function BoardDetail({ board }: Props) {
         });
       }
     } else if (type === "TASK") {
+      // Handle task moving within or across columns
       const sourceCol = board.columns.find(
         (col) => col.id === source.droppableId
       );
@@ -95,6 +145,7 @@ export default function BoardDetail({ board }: Props) {
       if (!sourceCol || !destCol) return;
 
       if (sourceCol.id === destCol.id) {
+        // Reorder tasks in same column
         const tasks = [...sourceCol.tasks].sort((a, b) => a.position - b.position);
         const [moved] = tasks.splice(source.index, 1);
         tasks.splice(destination.index, 0, moved);
@@ -112,6 +163,7 @@ export default function BoardDetail({ board }: Props) {
           });
         }
       } else {
+        // Move task to another column
         const sourceTasks = [...sourceCol.tasks].sort(
           (a, b) => a.position - b.position
         );
@@ -120,10 +172,11 @@ export default function BoardDetail({ board }: Props) {
         );
 
         const [moved] = sourceTasks.splice(source.index, 1);
-        const movedTask = { ...moved, column_id: destCol.id }; // clone
+        const movedTask = { ...moved, column_id: destCol.id };
 
         destTasks.splice(destination.index, 0, movedTask);
 
+        // Update positions in source column
         for (let i = 0; i < sourceTasks.length; i++) {
           const task = sourceTasks[i];
           await updateTask({
@@ -137,6 +190,7 @@ export default function BoardDetail({ board }: Props) {
           });
         }
 
+        // Update positions in destination column
         for (let i = 0; i < destTasks.length; i++) {
           const task = destTasks[i];
           await updateTask({
@@ -155,6 +209,7 @@ export default function BoardDetail({ board }: Props) {
 
   return (
     <div>
+      {/* Back link */}
       <div className="mb-4">
         <Link
           href="/"
@@ -163,8 +218,11 @@ export default function BoardDetail({ board }: Props) {
           ← Back to Boards
         </Link>
       </div>
+
+      {/* Board title */}
       <h1 className="text-2xl font-bold mb-4">{board.title}</h1>
 
+      {/* Drag & Drop Context */}
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="board" direction="horizontal" type="COLUMN">
           {(provided) => (
@@ -188,6 +246,7 @@ export default function BoardDetail({ board }: Props) {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                       >
+                        {/* Column header with title & edit */}
                         <div
                           className="p-4 border-b flex justify-between items-center cursor-move"
                           {...provided.dragHandleProps}
@@ -204,6 +263,7 @@ export default function BoardDetail({ board }: Props) {
                           </button>
                         </div>
 
+                        {/* Tasks in column */}
                         <Droppable droppableId={column.id} type="TASK">
                           {(provided) => (
                             <div
@@ -248,6 +308,7 @@ export default function BoardDetail({ board }: Props) {
                           )}
                         </Droppable>
 
+                        {/* Add task button */}
                         <div className="p-4 border-t">
                           <button
                             onClick={() => {
@@ -265,6 +326,7 @@ export default function BoardDetail({ board }: Props) {
                 ))}
               {provided.placeholder}
 
+              {/* Add new column button */}
               <div className="w-[250px] flex-shrink-0 bg-gray-50 p-4 rounded-md flex items-center justify-center">
                 <button
                   onClick={() => {
@@ -281,6 +343,7 @@ export default function BoardDetail({ board }: Props) {
         </Droppable>
       </DragDropContext>
 
+      {/* Task modal for create/edit */}
       {selectedColumnId && (
         <TaskModal
           task={selectedTask}
@@ -310,17 +373,15 @@ export default function BoardDetail({ board }: Props) {
             }
             setSelectedTask(null);
             setSelectedColumnId(null);
-            // No need to refetch because subscription updates live
           }}
           onDelete={async (taskId) => {
             await deleteTask({ variables: { id: taskId } });
             setSelectedTask(null);
-            setSelectedColumnId(null);
-            // No need to refetch
           }}
         />
       )}
 
+      {/* Column modal for create/edit */}
       {isColumnModalOpen && (
         <ColumnModal
           column={selectedColumn}
@@ -345,13 +406,11 @@ export default function BoardDetail({ board }: Props) {
             }
             setIsColumnModalOpen(false);
             setSelectedColumn(null);
-            // No need to refetch
           }}
           onDelete={async (id) => {
             await deleteColumn({ variables: { id } });
             setIsColumnModalOpen(false);
             setSelectedColumn(null);
-            // No need to refetch
           }}
         />
       )}
